@@ -60,7 +60,7 @@ cursor:pointer;
 
 <input type="text" id="mobile" placeholder="Mobile Number" required>
 
-<input type="text" id="lrno" placeholder="LR Number" required>
+<input type="text" id="Sapno" placeholder="SAP Number" required>
 
 <button onclick="submitClaim()">Submit</button>
 
@@ -72,7 +72,7 @@ function submitClaim(){
 
 let name=document.getElementById("name").value;
 let mobile=document.getElementById("mobile").value;
-let lr=document.getElementById("lrno").value;
+let Sap=document.getElementById("Sapno").value;
 
 let index=localStorage.getItem("claimItemIndex");
 
@@ -83,7 +83,7 @@ items[index].status="claimed";
 items[index].claimer={
 name:name,
 mobile:mobile,
-lr:lr
+Sap:Sap
 };
 
 localStorage.setItem("foundItems",JSON.stringify(items));
@@ -98,3 +98,4 @@ window.location.href="Gallery.html";
 
 </body>
 </html>
+
