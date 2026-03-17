@@ -126,29 +126,35 @@ cursor:pointer;
 </div>
 
 <script>
+document.getElementById("foundForm").addEventListener("submit", function(e) {
+    e.preventDefault();
 
-document.getElementById("foundForm").addEventListener("submit",function(e){
+    let name = itemName.value.trim();
+    let desc = description.value.trim();
+    let date = dateFound.value;
+    let location = locationFound.value.trim();
 
-e.preventDefault();
+    if (!name || !desc || !date || !location) {
+        alert("All fields are required and cannot be empty!");
+        return;
+    }
 
-let item={
-name:itemName.value,
-description:description.value,
-date:dateFound.value,
-location:locationFound.value,
-status:"inventory"
-};
+    let item = {
+        name: name,
+        description: desc,
+        date: date,
+        location: location,
+        status: "inventory"
+    };
 
-let items=JSON.parse(localStorage.getItem("foundItems"))||[];
+    let items = JSON.parse(localStorage.getItem("foundItems")) || [];
+    items.push(item);
+    localStorage.setItem("foundItems", JSON.stringify(items));
 
-items.push(item);
+    alert("Item added to inventory");
 
-localStorage.setItem("foundItems",JSON.stringify(items));
-
-alert("Item added to inventory");
-
+    document.getElementById("foundForm").reset();
 });
-
 </script>
 
 </body>
