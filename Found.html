@@ -133,9 +133,10 @@ document.getElementById("foundForm").addEventListener("submit", function(e) {
     let desc = description.value.trim();
     let date = dateFound.value;
     let location = locationFound.value.trim();
+    let submitted = submittedTo.value.trim();
 
-    if (!name || !desc || !date || !location) {
-        alert("All fields are required and cannot be empty!");
+    if (!name || !desc || !date || !location || !submitted) {
+        alert("All fields are required!");
         return;
     }
 
@@ -144,6 +145,7 @@ document.getElementById("foundForm").addEventListener("submit", function(e) {
         description: desc,
         date: date,
         location: location,
+        submittedTo: submitted,
         status: "inventory"
     };
 
@@ -151,7 +153,7 @@ document.getElementById("foundForm").addEventListener("submit", function(e) {
     items.push(item);
     localStorage.setItem("foundItems", JSON.stringify(items));
 
-    alert("Item added to inventory");
+    alert("Item added successfully!");
 
     document.getElementById("foundForm").reset();
 });
