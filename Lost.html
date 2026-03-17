@@ -171,20 +171,13 @@ matchFound=true;
 let card=document.createElement("div");
 card.className="result-card";
 
-card.innerHTML=`
-
-<h3>${item.name}</h3>
-
-<p>${item.description}</p>
-
-<p><b>Location:</b> ${item.location}</p>
-
-<p><b>Date:</b> ${item.date}</p>
-
-<p><b>Submitted To:</b> ${item.submittedTo || "Not specified"}</p>
-
-<button class="raise" onclick="raiseHand(${index})">✋ Raise Hand</button>
-
+card.innerHTML = `
+  <h3>${item.name}</h3>
+  <p>${item.description || "No description provided."}</p>
+  <p><b>Location:</b> ${item.location}</p>
+  <p><b>Date:</b> ${item.date}</p>
+  <p><b>Submitted To:</b> ${item.submittedTo || "Not specified"}</p>
+  <button class="raise" onclick="raiseHand(${index})">✋ Raise Hand</button>
 `;
 
 results.appendChild(card);
