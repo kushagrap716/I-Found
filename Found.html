@@ -13,8 +13,6 @@ background:linear-gradient(to right,#43cea2,#185a9d);
 padding-top:80px;
 }
 
-/* NAVBAR */
-
 .navbar{
 background:white;
 position:fixed;
@@ -52,8 +50,6 @@ font-weight:500;
 .nav-links a:hover{
 color:#2193b0;
 }
-
-/* FORM */
 
 .container{
 max-width:500px;
@@ -113,13 +109,13 @@ cursor:pointer;
 
 <input type="text" id="itemName" placeholder="Item Name" required>
 
-<textarea id="description" placeholder="Description"></textarea>
+<textarea id="description" placeholder="Description" required></textarea>
 
-<input type="date" id="dateFound">
+<input type="date" id="dateFound" required>
 
-<input type="text" id="locationFound" placeholder="Location Found">
+<input type="text" id="locationFound" placeholder="Location Found" required>
 
-<input type="text" id="submittedTo" placeholder="Submitted To">
+<input type="text" id="submittedTo" placeholder="Submitted To" required>
 
 <button type="submit">Submit</button>
 
