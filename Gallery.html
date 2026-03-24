@@ -15,12 +15,14 @@
             padding-top: 80px;
         }
 
+        /* Navbar */
         .navbar {
             background: white;
             position: fixed;
             top: 0;
             width: 100%;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
         }
 
         .navbar-container {
@@ -66,18 +68,13 @@
         .hamburger.active span:nth-child(1) {
             transform: rotate(45deg) translate(5px, 5px);
         }
-
-        .hamburger.active span:nth-child(2) {
-            opacity: 0;
-        }
-
+        .hamburger.active span:nth-child(2) { opacity: 0; }
         .hamburger.active span:nth-child(3) {
             transform: rotate(-45deg) translate(5px, -5px);
         }
 
         @media (max-width: 768px) {
             .hamburger { display: flex; }
-
             .nav-links {
                 position: absolute;
                 top: 60px;
@@ -90,15 +87,14 @@
                 transition: max-height 0.3s ease;
                 box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             }
-
             .nav-links a {
                 padding: 15px 20px;
                 border-top: 1px solid #eee;
             }
-
             .nav-links.show { max-height: 300px; }
         }
 
+        /* Gallery */
         .container {
             max-width: 1200px;
             margin: auto;
@@ -107,13 +103,18 @@
 
         .gallery {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(3, 1fr); /* 3 cards per row */
             gap: 20px;
         }
 
-        @media (max-width: 992px) { .gallery { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 600px) { .gallery { grid-template-columns: 1fr; } }
+        @media (max-width: 992px) {
+            .gallery { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .gallery { grid-template-columns: 1fr; }
+        }
 
+        /* Card */
         .card {
             background: white;
             padding: 15px;
@@ -132,33 +133,12 @@
             cursor: pointer;
         }
 
-        .controls {
-            display: flex;
-            justify-content: flex-end;
-            gap: 6px;
-            margin-bottom: 6px;
-        }
-
-        .deleteBtn {
-            width: 24px;
-            height: 24px;
-            background: #e74c3c;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            cursor: pointer;
-        }
-
         .status {
             width: 14px;
             height: 14px;
             border-radius: 50%;
+            margin-left: auto;
         }
-
         .red { background: red; }
         .green { background: green; }
 
@@ -173,16 +153,15 @@
         .modal {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
             background: rgba(0,0,0,0.8);
             justify-content: center;
             align-items: center;
             z-index: 1000;
         }
-
         .modal img {
             max-width: 90%;
             max-height: 90%;
@@ -219,7 +198,7 @@
     </div>
 
     <script>
-
+        // Navbar toggle
         const hamburger = document.getElementById("hamburger");
         const navLinks = document.getElementById("navLinks");
         hamburger.addEventListener("click", () => {
@@ -227,9 +206,8 @@
             hamburger.classList.toggle("active");
         });
 
-        const isAdmin = localStorage.getItem("admin") === "true";
-
-        let items = JSON.parse(localStorage.getItem("foundItems")) || [];
+        // Load items from localStorage
+        const items = JSON.parse(localStorage.getItem("foundItems")) || [];
         const gallery = document.getElementById("gallery");
 
         items.forEach((item, index) => {
@@ -240,13 +218,7 @@
                 ? `<img src="${item.image}" onclick="openModal(this.src)">`
                 : `<div style="width:100%;height:150px;background:#ddd;border-radius:8px;margin-bottom:10px;">No Image</div>`;
 
-            const deleteButton = isAdmin 
-                ? `<button class="deleteBtn" onclick="deleteItem(${index})">✖</button>` 
-                : "";
-
-            const statusHTML = `<div class="status ${item.status==="claimed"?"green":"red"}"></div>`;
-
-            const claimDetails = item.claimer && isAdmin
+            const claimDetails = item.claimer
                 ? `<div class="claim-info">
                      <b>Claimed By:</b> ${item.claimer.name}<br>
                      <b>Mobile:</b> ${item.claimer.mobile}<br>
@@ -255,13 +227,14 @@
                 : "";
 
             card.innerHTML = `
-                <div class="controls">
-                    ${statusHTML}
-                    ${deleteButton}
+                <!-- Status circle -->
+                <div style="display:flex; justify-content:flex-end; margin-bottom:5px;">
+                    <div class="status ${item.status === "claimed" ? "green" : "red"}"></div>
                 </div>
+
                 ${imageHTML}
                 <h3>${item.name}</h3>
-                <p>${item.description}</p>
+                <p>${item.description || "No description provided."}</p>
                 <p><b>Location:</b> ${item.location}</p>
                 <p><b>Date:</b> ${item.date}</p>
                 <p><b>Submitted To:</b> ${item.submittedTo || "Not specified"}</p>
@@ -271,16 +244,6 @@
             gallery.appendChild(card);
         });
 
-        function deleteItem(index) {
-            if (!isAdmin) return;
-            let items = JSON.parse(localStorage.getItem("foundItems")) || [];
-            if (confirm("Delete this item?")) {
-                items.splice(index, 1);
-                localStorage.setItem("foundItems", JSON.stringify(items));
-                location.reload();
-            }
-        }
-
         function openModal(src) {
             const modal = document.getElementById("imageModal");
             const modalImg = document.getElementById("modalImg");
@@ -288,9 +251,10 @@
             modalImg.src = src;
         }
 
-        document.getElementById("imageModal").addEventListener("click", function(){
+        document.getElementById("imageModal").addEventListener("click", function() {
             this.style.display = "none";
         });
     </script>
+
 </body>
 </html>
