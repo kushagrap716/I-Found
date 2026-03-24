@@ -1,11 +1,9 @@
 <!DOCTYPE html>
-
 <html>
 <head>
 <title>Report Found Item</title>
 
 <style>
-
 *{box-sizing:border-box;margin:0;padding:0;font-family:Arial}
 
 body{
@@ -60,6 +58,10 @@ border-radius:10px;
 box-shadow:0 5px 15px rgba(0,0,0,0.2);
 }
 
+h2{
+margin-bottom:15px;
+}
+
 form{
 display:flex;
 flex-direction:column;
@@ -72,6 +74,58 @@ border-radius:6px;
 border:1px solid #ccc;
 }
 
+.upload-box{
+border:2px dashed #aaa;
+padding:20px;
+text-align:center;
+border-radius:10px;
+cursor:pointer;
+margin-bottom:12px;
+transition:0.3s;
+}
+
+.upload-box:hover{
+border-color:#185a9d;
+background:#f5faff;
+}
+
+.upload-box.dragover{
+border-color:#3cb043;
+background:#eaffea;
+}
+
+.preview{
+margin-top:10px;
+display:none;
+position:relative;
+}
+
+.preview img{
+width:100%;
+max-height:200px;
+object-fit:cover;
+border-radius:10px;
+}
+
+.remove-btn{
+position:absolute;
+top:5px;
+right:5px;
+background:red;
+color:white;
+border:none;
+border-radius:50%;
+width:25px;
+height:25px;
+cursor:pointer;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:16px;
+line-height:1;
+padding:0;
+}
+
 button{
 padding:12px;
 background:#3cb043;
@@ -81,28 +135,26 @@ border-radius:6px;
 cursor:pointer;
 }
 
+button:hover{
+background:#2e8b3c;
+}
 </style>
-
 </head>
 
 <body>
 
 <div class="navbar">
 <div class="navbar-container">
-
 <div class="logo">📦 I FOUND</div>
-
 <div class="nav-links">
 <a href="Project.html">Home</a>
 <a href="Gallery.html">Item Gallery</a>
 <a href="Lost.html">Lost Item</a>
 </div>
-
 </div>
 </div>
 
 <div class="container">
-
 <h2>Report Found Item</h2>
 
 <form id="foundForm">
@@ -117,13 +169,75 @@ cursor:pointer;
 
 <input type="text" id="submittedTo" placeholder="Submitted To" required>
 
+<div class="upload-box" id="uploadBox">
+    Upload Image Here
+<input type="file" id="itemImage" accept="image/*" hidden>
+</div>
+
+<div class="preview" id="previewContainer">
+<img id="previewImage">
+<button type="button" class="remove-btn" id="removeImage">X</button>
+</div>
+
 <button type="submit">Submit</button>
 
 </form>
-
 </div>
 
 <script>
+let uploadBox = document.getElementById("uploadBox");
+let fileInput = document.getElementById("itemImage");
+let previewContainer = document.getElementById("previewContainer");
+let previewImage = document.getElementById("previewImage");
+let removeBtn = document.getElementById("removeImage");
+
+let selectedFile = null;
+
+uploadBox.addEventListener("click", () => fileInput.click());
+
+fileInput.addEventListener("change", function() {
+    handleFile(this.files[0]);
+});
+
+uploadBox.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    uploadBox.classList.add("dragover");
+});
+
+uploadBox.addEventListener("dragleave", () => {
+    uploadBox.classList.remove("dragover");
+});
+
+uploadBox.addEventListener("drop", (e) => {
+    e.preventDefault();
+    uploadBox.classList.remove("dragover");
+    let file = e.dataTransfer.files[0];
+    handleFile(file);
+});
+
+function handleFile(file) {
+    if (!file || !file.type.startsWith("image/")) {
+        alert("Please select a valid image!");
+        return;
+    }
+
+    selectedFile = file;
+    let reader = new FileReader();
+    reader.onload = function() {
+        previewImage.src = reader.result;
+        previewContainer.style.display = "block";
+        uploadBox.style.display = "none";
+    };
+    reader.readAsDataURL(file);
+}
+
+removeBtn.addEventListener("click", () => {
+    selectedFile = null;
+    previewContainer.style.display = "none";
+    fileInput.value = "";
+    uploadBox.style.display = "block";
+});
+
 document.getElementById("foundForm").addEventListener("submit", function(e) {
     e.preventDefault();
 
@@ -133,27 +247,35 @@ document.getElementById("foundForm").addEventListener("submit", function(e) {
     let location = locationFound.value.trim();
     let submitted = submittedTo.value.trim();
 
-    if (!name || !desc || !date || !location || !submitted) {
-        alert("All fields are required!");
+    if (!name || !desc || !date || !location || !submitted || !selectedFile) {
+        alert("All fields including image are required!");
         return;
     }
 
-    let item = {
-        name: name,
-        description: desc,
-        date: date,
-        location: location,
-        submittedTo: submitted,
-        status: "inventory"
+    let reader = new FileReader();
+
+    reader.onload = function() {
+        let item = {
+            name,
+            description: desc,
+            date,
+            location,
+            submittedTo: submitted,
+            image: reader.result,
+            status: "inventory"
+        };
+
+        let items = JSON.parse(localStorage.getItem("foundItems")) || [];
+        items.push(item);
+        localStorage.setItem("foundItems", JSON.stringify(items));
+
+        alert("Item added successfully!");
+        document.getElementById("foundForm").reset();
+        previewContainer.style.display = "none";
+        selectedFile = null;
     };
 
-    let items = JSON.parse(localStorage.getItem("foundItems")) || [];
-    items.push(item);
-    localStorage.setItem("foundItems", JSON.stringify(items));
-
-    alert("Item added successfully!");
-
-    document.getElementById("foundForm").reset();
+    reader.readAsDataURL(selectedFile);
 });
 </script>
 
