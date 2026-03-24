@@ -1,208 +1,207 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>I Found - Lost & Found</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I Found - Lost & Found</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-<style>
+        body {
+            /* Kept the Violet and Lavender Gradient */
+            background: linear-gradient(135deg, #2e0249 0%, #570a57 50%, #a91079 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial, Helvetica, sans-serif;
-}
+        /* Background Animation */
+        #bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
 
-body{
-background: linear-gradient(to right,#e7d1c4,#c6e39a);
-}
+        .floating-icon {
+            position: absolute;
+            bottom: -100px;
+            opacity: 0.15;
+            animation: floatUp linear infinite;
+        }
 
-.navbar{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:15px 40px;
-background:#e9e1da;
-}
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.15; }
+            100% { transform: translateY(-120vh) rotate(360deg); opacity: 0; }
+        }
 
-.logo{
-font-weight:bold;
-font-size:18px;
-}
+        /* Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 80px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 10;
+        }
 
-.nav-links a{
-text-decoration:none;
-margin:0 12px;
-color:#333;
-font-size:14px;
-}
+        .logo { font-weight: bold; font-size: 22px; }
 
-.signout{
-border:1px solid #999;
-background:#ddd;
-padding:6px 14px;
-border-radius:6px;
-cursor:pointer;
-}
+        /* Main Content */
+        .container {
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 60px 100px;
+            z-index: 5;
+        }
 
-.container{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:80px 100px;
-}
+        .text h1 {
+            font-size: 70px;
+            line-height: 1.1;
+        }
 
-.text h1{
-font-size:70px;
-line-height:1.1;
-}
+        .highlight { color: #ff41ed; }
 
-.green{
-color:#2d5c17;
-}
+        .text p {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #e0e0e0;
+            max-width: 450px;
+        }
 
-.text p{
-margin-top:10px;
-color:#444;
-}
+        /* Same Size Buttons */
+        .buttons {
+            margin-top: 40px;
+            display: flex;
+            gap: 20px;
+        }
 
-.buttons{
-margin-top:25px;
-}
+        .btn {
+            width: 180px;
+            height: 55px;
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
 
-.btn{
-display:block;
-width:160px;
-padding:12px;
-margin-bottom:12px;
-border:none;
-border-radius:6px;
-color:white;
-font-size:16px;
-cursor:pointer;
-}
+        .lost { background: #ff4b2b; }
+        .found { background: #00d2ff; }
 
-.lost{
-background:#e74c3c;
-}
+        .image-section {
+            width: 40%;
+            display: flex;
+            justify-content: flex-end;
+        }
 
-.found{
-background:#3cb043;
-}
+        .single-box {
+            width: 400px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-.images{
-position:relative;
-width:400px;
-height:250px;
-}
+        .single-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.8;
+        }
 
-.images img{
-width:180px;
-border-radius:8px;
-position:absolute;
-box-shadow:0 5px 15px rgba(0,0,0,0.2);
-}
+        footer {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 30px 80px;
+            z-index: 10;
+        }
 
-.img1{
-top:0;
-left:0;
-}
-
-.img2{
-top:40px;
-left:120px;
-}
-
-.img3{
-top:90px;
-left:240px;
-}
-
-footer{
-background:#e9e1da;
-padding:25px 60px;
-display:flex;
-justify-content:space-between;
-margin-top:60px;
-}
-
-footer h4{
-margin-bottom:10px;
-}
-
-footer p{
-font-size:14px;
-margin:4px 0;
-}
-
-.copyright{
-text-align:center;
-font-size:12px;
-padding:10px;
-}
-
-</style>
-
+        .copyright {
+            text-align: center;
+            padding: 15px;
+            font-size: 12px;
+            background: rgba(0,0,0,0.3);
+        }
+    </style>
 </head>
-
 <body>
 
-<div class="navbar">
+    <div id="bg-animation"></div>
 
-<div class="logo">📦 I FOUND</div>
+    <nav class="navbar">
+        <div class="logo">📦 I FOUND</div>
+        <div class="nav-links">
+            <a href="Gallery.html" style="color: white; text-decoration: none;">Item Gallery</a>
+        </div>
+    </nav>
 
-<div class="nav-links">
-<a href="Gallery.html">Item Gallery</a>
-</div>
+    <div class="container">
+        <div class="text">
+            <h1>Find &<br>Recover<br><span class="highlight">With Ease</span></h1>
+            <p>Experience effortless recovery with our dedicated community-driven lost and found service.</p>
+            <div class="buttons">
+                <button class="btn lost">Lost Something</button>
+                <button class="btn found">Found Something</button>
+            </div>
+        </div>
 
-</div>
+        <div class="image-section">
+            <div class="single-box">
+                <img src="1.jpeg" alt="Recovered Item">
+            </div>
+        </div>
+    </div>
 
-<div class="container">
+    <footer>
+        <div class="contact-info">
+            <h4>Contact Support</h4>
+            <p>Mob.No.: +91 xxxxxxxxxx</p>
+            <p>Email: help@ifound.com</p>
+        </div>
+    </footer>
 
-<div class="text">
+    <div class="copyright">
+        &copy; 2026 I FOUND. All rights reserved.
+    </div>
 
-<h1>
-Find &<br>
-Recover<br>
-<span class="green">With Ease</span>
-</h1>
-
-<p>Experience effortless recovery with our dedicated lost and found service.</p>
-
-<div class="buttons">
-    <button class="btn lost" onclick="location.href='Lost.html'">Lost</button>
-    <button class="btn found" onclick="location.href='Found.html'">Found</button>
-</div>
-
-</div>
-
-
-<div class="images">
-
-<img class="img1" src="1.jpeg" width="400" height="200">
-
-<img class="img2" src="2.jpeg" width="400" height="200">
-
-<img class="img3" src="3.jpeg" width="400" height="200">
-
-</div>
-
-</div>
-
-
-<footer>
-
-<div>
-<h4>Contact</h4>
-<p>Mob.No.: +91 xxxxxxxxxx</p>
-<p>Email: abc@gmail.com</p>
-</div>
-
-</footer>
-
-<div class="copyright">
-© Copyright 2026 Lost and Found
-</div>
+    <script>
+        const bgContainer = document.getElementById('bg-animation');
+        const icons = ['🔑', '📱', '🐕', '💍', '🎧', '👓'];
+        for (let i = 0; i < 20; i++) {
+            const span = document.createElement('span');
+            span.className = 'floating-icon';
+            span.innerText = icons[Math.floor(Math.random() * icons.length)];
+            span.style.left = Math.random() * 100 + 'vw';
+            span.style.fontSize = (Math.random() * 20 + 20) + 'px';
+            span.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            span.style.animationDelay = Math.random() * 5 + 's';
+            bgContainer.appendChild(span);
+        }
+    </script>
 </body>
 </html>
