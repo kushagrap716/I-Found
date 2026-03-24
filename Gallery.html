@@ -15,12 +15,14 @@
             padding-top: 80px;
         }
 
+        /* Navbar */
         .navbar {
             background: white;
             position: fixed;
             top: 0;
             width: 100%;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
         }
 
         .navbar-container {
@@ -77,7 +79,9 @@
         }
 
         @media (max-width: 768px) {
-            .hamburger { display: flex; }
+            .hamburger {
+                display: flex;
+            }
 
             .nav-links {
                 position: absolute;
@@ -97,10 +101,12 @@
                 border-top: 1px solid #eee;
             }
 
-            .nav-links.show { max-height: 300px; }
+            .nav-links.show {
+                max-height: 300px;
+            }
         }
 
-
+        /* Gallery container */
         .container {
             max-width: 1200px;
             margin: auto;
@@ -114,13 +120,18 @@
         }
 
         @media (max-width: 992px) {
-            .gallery { grid-template-columns: repeat(2, 1fr); }
+            .gallery {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         @media (max-width: 600px) {
-            .gallery { grid-template-columns: 1fr; }
+            .gallery {
+                grid-template-columns: 1fr;
+            }
         }
 
+        /* Card styles */
         .card {
             background: white;
             padding: 15px;
@@ -136,6 +147,27 @@
             object-fit: cover;
             border-radius: 8px;
             margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: flex-end;
+            gap: 6px;
+            margin-bottom: 6px;
+        }
+
+        .deleteBtn {
+            width: 24px;
+            height: 24px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
             cursor: pointer;
         }
 
@@ -156,13 +188,14 @@
             font-size: 13px;
         }
 
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
             background: rgba(0,0,0,0.8);
             justify-content: center;
             align-items: center;
@@ -176,7 +209,6 @@
         }
     </style>
 </head>
-
 <body>
 
     <div class="navbar">
@@ -195,7 +227,6 @@
         </div>
     </div>
 
-    <!-- Gallery Container -->
     <div class="container">
         <h1 style="color:white; margin-bottom:30px;">Found Items Gallery</h1>
         <div class="gallery" id="gallery"></div>
@@ -206,7 +237,7 @@
     </div>
 
     <script>
-
+        // Hamburger menu toggle
         const hamburger = document.getElementById("hamburger");
         const navLinks = document.getElementById("navLinks");
         hamburger.addEventListener("click", () => {
@@ -214,16 +245,24 @@
             hamburger.classList.toggle("active");
         });
 
-        const items = JSON.parse(localStorage.getItem("foundItems")) || [];
+        // Check if admin
+        const isAdmin = localStorage.getItem("admin") === "true";
+
+        let items = JSON.parse(localStorage.getItem("foundItems")) || [];
         const gallery = document.getElementById("gallery");
 
-        items.forEach(item => {
+        items.forEach((item, index) => {
             const card = document.createElement("div");
             card.className = "card";
 
             const imageHTML = item.image
                 ? `<img src="${item.image}" onclick="openModal(this.src)">`
                 : `<div style="width:100%;height:150px;background:#ddd;border-radius:8px;margin-bottom:10px;">No Image</div>`;
+
+            let deleteButton = "";
+            if (isAdmin) {
+                deleteButton = `<button class="deleteBtn" onclick="deleteItem(${index})">✖</button>`;
+            }
 
             const claimDetails = item.claimer
                 ? `<div class="claim-info">
@@ -234,6 +273,10 @@
                 : "";
 
             card.innerHTML = `
+                <div class="controls">
+                    ${isAdmin ? `<div class="status ${item.status==="claimed"?"green":"red"}"></div>` : ""}
+                    ${deleteButton}
+                </div>
                 ${imageHTML}
                 <h3>${item.name}</h3>
                 <p>${item.description}</p>
@@ -245,6 +288,15 @@
 
             gallery.appendChild(card);
         });
+
+        function deleteItem(index) {
+            let items = JSON.parse(localStorage.getItem("foundItems")) || [];
+            if (confirm("Delete this item?")) {
+                items.splice(index, 1);
+                localStorage.setItem("foundItems", JSON.stringify(items));
+                location.reload();
+            }
+        }
 
         function openModal(src) {
             const modal = document.getElementById("imageModal");
