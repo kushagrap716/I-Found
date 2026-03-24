@@ -1,332 +1,265 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html><html>
 <head>
     <title>Item Gallery</title>
     <style>
-        /* Reset & Global Styles */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             font-family: Arial, Helvetica, sans-serif;
-        }
+        }body {
+        background: linear-gradient(to right, #2193b0, #6dd5ed);
+        padding-top: 80px;
+    }
 
-        body {
-            background: linear-gradient(to right, #2193b0, #6dd5ed);
-            padding-top: 80px;
-        }
+    .navbar {
+        background: white;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+    }
 
-        /* Navbar */
-        .navbar {
-            background: white;
-            position: fixed;
-            top: 0;
-            width: 100%;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-        }
+    .navbar-container {
+        max-width: 1200px;
+        margin: auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 20px;
+    }
 
-        .navbar-container {
-            max-width: 1200px;
-            margin: auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-        }
+    .logo {
+        font-size: 22px;
+        font-weight: bold;
+        color: #185a9d;
+    }
 
-        .logo {
-            font-size: 22px;
-            font-weight: bold;
-            color: #185a9d;
-        }
+    .nav-links {
+        display: flex;
+        gap: 20px;
+    }
 
+    .nav-links a {
+        text-decoration: none;
+        color: #333;
+    }
+
+    .hamburger {
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+        cursor: pointer;
+    }
+
+    .hamburger span {
+        height: 3px;
+        width: 25px;
+        background: #185a9d;
+        border-radius: 2px;
+        transition: all 0.3s;
+    }
+
+    @media (max-width: 768px) {
+        .hamburger { display: flex; }
         .nav-links {
-            display: flex;
-            gap: 20px;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: #333;
-        }
-
-        /* Hamburger menu */
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            gap: 5px;
-            cursor: pointer;
-        }
-
-        .hamburger span {
-            height: 3px;
-            width: 25px;
-            background: #185a9d;
-            border-radius: 2px;
-            transition: all 0.3s;
-        }
-
-        .hamburger.active span:nth-child(1) {
-            transform: rotate(45deg) translate(5px, 5px);
-        }
-
-        .hamburger.active span:nth-child(2) {
-            opacity: 0;
-        }
-
-        .hamburger.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(5px, -5px);
-        }
-
-        @media (max-width: 768px) {
-            .hamburger {
-                display: flex;
-            }
-
-            .nav-links {
-                position: absolute;
-                top: 60px;
-                right: 0;
-                background: white;
-                width: 100%;
-                max-height: 0;
-                overflow: hidden;
-                flex-direction: column;
-                transition: max-height 0.3s ease;
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            }
-
-            .nav-links a {
-                padding: 15px 20px;
-                border-top: 1px solid #eee;
-            }
-
-            .nav-links.show {
-                max-height: 300px;
-            }
-        }
-
-        /* Container & Gallery */
-        .container {
-            max-width: 1200px;
-            margin: auto;
-            padding: 20px;
-        }
-
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-        }
-
-        @media (max-width: 992px) {
-            .gallery {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 600px) {
-            .gallery {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Card Styles */
-        .card {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
-
-        .card img {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            cursor: pointer;
-        }
-
-        /* Status & Delete container at bottom-right */
-        .card-footer {
             position: absolute;
-            bottom: 15px;
-            right: 15px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .status {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            border: 1px solid #000;
-        }
-
-        .red {
-            background: red;
-        }
-
-        .green {
-            background: green;
-        }
-
-        .deleteBtn {
-            width: 24px;
-            height: 24px;
-            background: #e74c3c;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            cursor: pointer;
-        }
-
-        /* Claimer Info */
-        .claim-info {
-            margin-top: 10px;
-            background: #f4f4f4;
-            padding: 8px;
-            border-radius: 6px;
-            font-size: 13px;
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
+            top: 60px;
+            right: 0;
+            background: white;
             width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
+            max-height: 0;
+            overflow: hidden;
+            flex-direction: column;
+            transition: max-height 0.3s ease;
         }
+        .nav-links.show { max-height: 300px; }
+    }
 
-        .modal img {
-            max-width: 90%;
-            max-height: 90%;
-            border-radius: 10px;
-        }
-    </style>
+    .container {
+        max-width: 1200px;
+        margin: auto;
+        padding: 20px;
+    }
+
+    .gallery {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
+
+    @media (max-width: 992px) {
+        .gallery { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 600px) {
+        .gallery { grid-template-columns: 1fr; }
+    }
+
+    .card {
+        background: white;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        position: relative;
+    }
+
+    .card img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        cursor: pointer;
+    }
+
+    .card-footer {
+        position: absolute;
+        bottom: 15px;
+        right: 15px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .status {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        border: 1px solid #000;
+    }
+
+    .red { background: red; }
+    .green { background: green; }
+
+    .deleteBtn {
+        width: 24px;
+        height: 24px;
+        background: #e74c3c;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+    .claim-info {
+        margin-top: 10px;
+        background: #f4f4f4;
+        padding: 8px;
+        border-radius: 6px;
+        font-size: 13px;
+    }
+
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.8);
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal img {
+        max-width: 90%;
+        max-height: 90%;
+    }
+</style>
+
 </head>
-<body>
-
-    <!-- Navbar -->
-    <div class="navbar">
-        <div class="navbar-container">
-            <div class="logo">📦 I FOUND</div>
-            <div class="hamburger" id="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-            <div class="nav-links" id="navLinks">
-                <a href="Project.html">Home</a>
-                <a href="Lost.html">Lost Item</a>
-                <a href="Found.html">Found Item</a>
-            </div>
+<body><div class="navbar">
+    <div class="navbar-container">
+        <div class="logo">📦 I FOUND</div>
+        <div class="hamburger" id="hamburger">
+            <span></span><span></span><span></span>
+        </div>
+        <div class="nav-links" id="navLinks">
+            <a href="Project.html">Home</a>
+            <a href="Lost.html">Lost Item</a>
+            <a href="Found.html">Found Item</a>
         </div>
     </div>
+</div><div class="container">
+    <h1 style="color:white; margin-bottom:30px;">Found Items Gallery</h1>
+    <div class="gallery" id="gallery"></div>
+</div><div class="modal" id="imageModal">
+    <img id="modalImg">
+</div><script>
 
-    <!-- Gallery Container -->
-    <div class="container">
-        <h1 style="color:white; margin-bottom:30px;">Found Items Gallery</h1>
-        <div class="gallery" id="gallery"></div>
-    </div>
+const hamburger = document.getElementById("hamburger");
+const navLinks = document.getElementById("navLinks");
+hamburger.addEventListener("click", () => {
+    navLinks.classList.toggle("show");
+});
 
-    <!-- Image Modal -->
-    <div class="modal" id="imageModal">
-        <img id="modalImg">
-    </div>
+// Strong admin check
+const isAdmin = localStorage.getItem("admin") === "true";
 
-    <script>
-        // Navbar toggle
-        const hamburger = document.getElementById("hamburger");
-        const navLinks = document.getElementById("navLinks");
-        hamburger.addEventListener("click", () => {
-            navLinks.classList.toggle("show");
-            hamburger.classList.toggle("active");
-        });
+const items = JSON.parse(localStorage.getItem("foundItems")) || [];
+const gallery = document.getElementById("gallery");
 
-        // Admin check
-        const isAdmin = localStorage.getItem("admin") === "true";
+items.forEach(item => {
 
-        // Load items
-        const items = JSON.parse(localStorage.getItem("foundItems")) || [];
-        const gallery = document.getElementById("gallery");
+    const card = document.createElement("div");
+    card.className = "card";
 
-        items.forEach(item => {
-            const card = document.createElement("div");
-            card.className = "card";
+    const imgHTML = item.image
+        ? `<img src="${item.image}" onclick="openModal(this.src)">`
+        : `<div style="height:150px;background:#ddd;border-radius:8px;">No Image</div>`;
 
-            const imgHTML = item.image
-                ? `<img src="${item.image}" onclick="openModal(this.src)">`
-                : `<div style="width:100%; height:150px; background:#ddd; border-radius:8px; margin-bottom:10px;">No Image</div>`;
+    // Only admin sees claim info
+    const claimDetails = (isAdmin && item.claimer)
+        ? `<div class="claim-info">
+            <b>Claimed By:</b> ${item.claimer.name}<br>
+            <b>Mobile:</b> ${item.claimer.mobile}<br>
+            <b>SAP No:</b> ${item.claimer.Sap}
+        </div>`
+        : "";
 
-            const claimDetails = item.claimer
-                ? `<div class="claim-info">
-                     <b>Claimed By:</b> ${item.claimer.name}<br>
-                     <b>Mobile:</b> ${item.claimer.mobile}<br>
-                     <b>SAP No:</b> ${item.claimer.Sap}
-                   </div>`
-                : "";
+    // Only admin sees delete button
+    const deleteBtnHTML = isAdmin
+        ? `<button class="deleteBtn" onclick="deleteItem(${item.id})">✖</button>`
+        : "";
 
-            const statusClass = (item.status && item.status.toLowerCase() === "claimed") ? "green" : "red";
+    const statusClass = (item.status === "claimed") ? "green" : "red";
 
-            const deleteBtnHTML = isAdmin
-                ? `<button class="deleteBtn" onclick="deleteItem('${item.id || item.name}')">✖</button>`
-                : "";
+    card.innerHTML = `
+        ${imgHTML}
+        <h3>${item.name}</h3>
+        <p>${item.description || "No description"}</p>
+        <p><b>Location:</b> ${item.location}</p>
+        <p><b>Date:</b> ${item.date}</p>
+        ${claimDetails}
+        <div class="card-footer">
+            <div class="status ${statusClass}"></div>
+            ${deleteBtnHTML}
+        </div>
+    `;
 
-            card.innerHTML = `
-                ${imgHTML}
-                <h3>${item.name}</h3>
-                <p>${item.description || "No description provided."}</p>
-                <p><b>Location:</b> ${item.location}</p>
-                <p><b>Date:</b> ${item.date}</p>
-                <p><b>Submitted To:</b> ${item.submittedTo || "Not specified"}</p>
-                ${claimDetails}
-                <div class="card-footer">
-                    <div class="status ${statusClass}"></div>
-                    ${deleteBtnHTML}
-                </div>
-            `;
+    gallery.appendChild(card);
+});
 
-            gallery.appendChild(card);
-        });
+function deleteItem(id) {
+    if (!isAdmin) return;
+    if (confirm("Delete this item?")) {
+        let items = JSON.parse(localStorage.getItem("foundItems")) || [];
+        items = items.filter(item => item.id !== id);
+        localStorage.setItem("foundItems", JSON.stringify(items));
+        location.reload();
+    }
+}
 
-        function deleteItem(id) {
-            if (!isAdmin) return;
-            if (confirm("Delete this item?")) {
-                let items = JSON.parse(localStorage.getItem("foundItems")) || [];
-                items = items.filter(item => (item.id || item.name) !== id);
-                localStorage.setItem("foundItems", JSON.stringify(items));
-                location.reload();
-            }
-        }
+function openModal(src) {
+    document.getElementById("imageModal").style.display = "flex";
+    document.getElementById("modalImg").src = src;
+}
 
-        function openModal(src){
-            const modal = document.getElementById("imageModal");
-            const modalImg = document.getElementById("modalImg");
-            modal.style.display = "flex";
-            modalImg.src = src;
-        }
+document.getElementById("imageModal").addEventListener("click", () => {
+    document.getElementById("imageModal").style.display = "none";
+});
 
-        document.getElementById("imageModal").addEventListener("click", () => {
-            document.getElementById("imageModal").style.display = "none";
-        });
-    </script>
-
-</body>
+</script></body>
 </html>
