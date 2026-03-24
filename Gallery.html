@@ -2,6 +2,7 @@
 <html>
 <head>
 <title>Item Gallery</title>
+
 <style>
 *{
 box-sizing:border-box;
@@ -9,10 +10,12 @@ margin:0;
 padding:0;
 font-family:Arial;
 }
+
 body{
 background:linear-gradient(to right,#2193b0,#6dd5ed);
 padding-top:80px;
 }
+
 .navbar{
 background:white;
 position:fixed;
@@ -20,6 +23,7 @@ top:0;
 width:100%;
 box-shadow:0 4px 10px rgba(0,0,0,0.1);
 }
+
 .navbar-container{
 max-width:1200px;
 margin:auto;
@@ -28,36 +32,57 @@ justify-content:space-between;
 align-items:center;
 padding:15px 20px;
 }
+
 .logo{
 font-size:22px;
 font-weight:bold;
 color:#185a9d;
 }
+
 .nav-links{
 display:flex;
 gap:20px;
 }
+
 .nav-links a{
 text-decoration:none;
 color:#333;
 }
+
 .container{
 max-width:1200px;
 margin:auto;
 padding:20px;
 }
+
 .gallery{
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
 gap:20px;
 }
+
 .card{
 background:white;
-padding:20px;
+padding:15px;
 border-radius:10px;
 position:relative;
 box-shadow:0 5px 15px rgba(0,0,0,0.2);
+transition:0.3s;
 }
+
+.card:hover{
+transform:translateY(-5px);
+}
+
+.item-img{
+width:100%;
+height:180px;
+object-fit:cover;
+border-radius:10px;
+margin-bottom:10px;
+cursor:pointer;
+}
+
 .controls{
 position:absolute;
 top:10px;
@@ -67,20 +92,19 @@ flex-direction:column;
 gap:6px;
 align-items:center;
 }
+
 .status{
 width:14px;
 height:14px;
 border-radius:50%;
 }
-.red{
-background:red;
-}
-.green{
-background:green;
-}
+
+.red{ background:red; }
+.green{ background:green; }
+
 .deleteBtn{
-width:14px;
-height:14px;
+width:18px;
+height:18px;
 background:#e74c3c;
 color:white;
 border:none;
@@ -88,9 +112,10 @@ border-radius:50%;
 display:flex;
 align-items:center;
 justify-content:center;
-font-size:9px;
+font-size:11px;
 cursor:pointer;
 }
+
 .claim-info{
 margin-top:10px;
 background:#f4f4f4;
@@ -98,9 +123,35 @@ padding:8px;
 border-radius:6px;
 font-size:13px;
 }
+
+.modal{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.8);
+justify-content:center;
+align-items:center;
+z-index:1000;
+}
+
+.modal img{
+max-width:90%;
+max-height:90%;
+border-radius:10px;
+}
+
+.modal.closeable{
+cursor:pointer;
+}
+
 </style>
 </head>
+
 <body>
+
 <div class="navbar">
 <div class="navbar-container">
 <div class="logo">📦 I FOUND</div>
@@ -111,23 +162,34 @@ font-size:13px;
 </div>
 </div>
 </div>
+
 <div class="container">
 <h1 style="color:white;margin-bottom:30px;">Found Items Gallery</h1>
 <div class="gallery" id="gallery"></div>
 </div>
+
+<div class="modal closeable" id="imageModal">
+<img id="modalImg">
+</div>
+
 <script>
 let items = JSON.parse(localStorage.getItem("foundItems")) || [];
 let gallery = document.getElementById("gallery");
 let isAdmin = localStorage.getItem("admin") === "true";
+
 items.forEach((item,index)=>{
+
 let card=document.createElement("div");
 card.className="card";
+
 let color=item.status==="claimed"?"green":"red";
+
 let deleteButton="";
-let claimDetails="";
 if(isAdmin){
 deleteButton=`<button class="deleteBtn" onclick="deleteItem(${index})">✖</button>`;
 }
+
+let claimDetails="";
 if(item.claimer && isAdmin){
 claimDetails=`
 <div class="claim-info">
@@ -137,11 +199,19 @@ claimDetails=`
 </div>
 `;
 }
+
+let imageHTML = item.image 
+? `<img src="${item.image}" class="item-img" onclick="openModal(this.src)">`
+: `<div style="height:180px;display:flex;align-items:center;justify-content:center;background:#eee;border-radius:10px;margin-bottom:10px;">No Image</div>`;
+
 card.innerHTML=`
 <div class="controls">
 <div class="status ${color}"></div>
 ${deleteButton}
 </div>
+
+${imageHTML}
+
 <h3>${item.name}</h3>
 <p>${item.description}</p>
 <p><b>Location:</b> ${item.location}</p>
@@ -149,8 +219,10 @@ ${deleteButton}
 <p><b>Submitted To:</b> ${item.submittedTo || "Not specified"}</p>
 ${claimDetails}
 `;
+
 gallery.appendChild(card);
 });
+
 function deleteItem(index){
 let items = JSON.parse(localStorage.getItem("foundItems")) || [];
 if(confirm("Delete this item?")){
@@ -159,6 +231,19 @@ localStorage.setItem("foundItems",JSON.stringify(items));
 location.reload();
 }
 }
+
+function openModal(src){
+let modal=document.getElementById("imageModal");
+let modalImg=document.getElementById("modalImg");
+
+modal.style.display="flex";
+modalImg.src=src;
+}
+
+document.getElementById("imageModal").addEventListener("click",function(){
+this.style.display="none";
+});
 </script>
+
 </body>
 </html>
