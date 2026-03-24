@@ -218,8 +218,16 @@
                 alert("All fields required!");
                 return;
             }
-
-            let item = { name, description: desc, date, location, submittedTo: submitted, image: imgData, status: "inventory" };
+let item = {
+    id: Date.now(),
+    name,
+    description: desc,
+    date,
+    location,
+    submittedTo: submitted,
+    image: imgData,
+    status: "inventory"
+};
             let items = JSON.parse(localStorage.getItem("foundItems")) || [];
             items.push(item);
             localStorage.setItem("foundItems", JSON.stringify(items));
