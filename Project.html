@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>I Found - Lost & Found</title>
+
     <style>
         * {
             margin: 0;
@@ -13,7 +14,6 @@
         }
 
         body {
-            /* Kept the Violet and Lavender Gradient */
             background: linear-gradient(135deg, #2e0249 0%, #570a57 50%, #a91079 100%);
             background-attachment: fixed;
             min-height: 100vh;
@@ -24,7 +24,6 @@
             position: relative;
         }
 
-        /* Background Animation */
         #bg-animation {
             position: fixed;
             top: 0;
@@ -48,7 +47,6 @@
             100% { transform: translateY(-120vh) rotate(360deg); opacity: 0; }
         }
 
-        /* Navbar */
         .navbar {
             display: flex;
             justify-content: space-between;
@@ -62,7 +60,6 @@
 
         .logo { font-weight: bold; font-size: 22px; }
 
-        /* Main Content */
         .container {
             flex: 1;
             display: flex;
@@ -86,7 +83,6 @@
             max-width: 450px;
         }
 
-        /* Same Size Buttons */
         .buttons {
             margin-top: 40px;
             display: flex;
@@ -107,6 +103,11 @@
 
         .lost { background: #ff4b2b; }
         .found { background: #00d2ff; }
+
+        .btn:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
 
         .image-section {
             width: 40%;
@@ -149,6 +150,7 @@
         }
     </style>
 </head>
+
 <body>
 
     <div id="bg-animation"></div>
@@ -164,9 +166,11 @@
         <div class="text">
             <h1>Find &<br>Recover<br><span class="highlight">With Ease</span></h1>
             <p>Experience effortless recovery with our dedicated community-driven lost and found service.</p>
+
+            <!-- ✅ BUTTONS WITH NAVIGATION -->
             <div class="buttons">
-                <button class="btn lost">Lost Something</button>
-                <button class="btn found">Found Something</button>
+                <button class="btn lost" onclick="goToLost()">Lost Something</button>
+                <button class="btn found" onclick="goToFound()">Found Something</button>
             </div>
         </div>
 
@@ -190,8 +194,18 @@
     </div>
 
     <script>
+        function goToLost() {
+            window.location.href = "lost.html";
+        }
+
+        function goToFound() {
+            window.location.href = "found.html";
+        }
+
+        // Background animation
         const bgContainer = document.getElementById('bg-animation');
         const icons = ['🔑', '📱', '🐕', '💍', '🎧', '👓'];
+
         for (let i = 0; i < 20; i++) {
             const span = document.createElement('span');
             span.className = 'floating-icon';
@@ -203,5 +217,6 @@
             bgContainer.appendChild(span);
         }
     </script>
+
 </body>
 </html>
