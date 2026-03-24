@@ -1,11 +1,9 @@
 <!DOCTYPE html>
-
 <html>
 <head>
 <title>Lost Item</title>
 
 <style>
-
 *{
 margin:0;
 padding:0;
@@ -17,8 +15,6 @@ body{
 background:linear-gradient(to right,#f7971e,#ffd200);
 padding-top:80px;
 }
-
-/* NAVBAR */
 
 .navbar{
 background:white;
@@ -53,10 +49,8 @@ text-decoration:none;
 color:#333;
 }
 
-/* FORM */
-
 .container{
-max-width:500px;
+max-width:1200px;
 margin:auto;
 background:white;
 padding:30px;
@@ -91,11 +85,50 @@ button:hover{
 background:#c0392b;
 }
 
+#results{
+display:grid;
+grid-template-columns:repeat(4, 1fr);
+gap:20px;
+}
+
+@media(max-width:992px){
+#results{
+grid-template-columns:repeat(2, 1fr);
+}
+}
+@media(max-width:600px){
+#results{
+grid-template-columns:1fr;
+}
+}
+
 .result-card{
 background:#f4f4f4;
 padding:15px;
-margin-top:15px;
 border-radius:8px;
+box-shadow:0 3px 10px rgba(0,0,0,0.1);
+display:flex;
+flex-direction:column;
+}
+
+.item-img{
+width:100%;
+height:120px;
+object-fit:cover;
+border-radius:8px;
+cursor:pointer;
+margin-bottom:10px;
+}
+
+.no-img{
+width:100%;
+height:120px;
+display:flex;
+align-items:center;
+justify-content:center;
+background:#ddd;
+border-radius:8px;
+margin-bottom:10px;
 }
 
 .no-result{
@@ -110,10 +143,28 @@ background:#27ae60;
 margin-top:10px;
 }
 
+.modal{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.8);
+justify-content:center;
+align-items:center;
+z-index:1000;
+}
+
+.modal img{
+max-width:90%;
+max-height:90%;
+border-radius:10px;
+}
+
 </style>
 
 </head>
-
 <body>
 
 <div class="navbar">
@@ -135,77 +186,75 @@ margin-top:10px;
 <h2>Search Lost Item</h2>
 
 <form onsubmit="searchItem(event)">
-
 <input type="text" id="searchBox" placeholder="Enter item name">
-
 <button type="submit">Search</button>
-
 </form>
 
 <div id="results"></div>
 
 </div>
 
+<div class="modal" id="imageModal">
+<img id="modalImg">
+</div>
+
 <script>
-
 function searchItem(event){
-
 event.preventDefault();
 
 let search=document.getElementById("searchBox").value.toLowerCase();
-
 let items=JSON.parse(localStorage.getItem("foundItems"))||[];
-
 let results=document.getElementById("results");
 
 results.innerHTML="";
-
 let matchFound=false;
 
 items.forEach((item,index)=>{
-
 if(item.status==="inventory" && item.name.toLowerCase().includes(search)){
-
 matchFound=true;
 
 let card=document.createElement("div");
 card.className="result-card";
 
+let imageHTML = item.image
+? `<img src="${item.image}" class="item-img" onclick="openModal(this.src)">`
+: `<div class="no-img">No Image</div>`;
+
 card.innerHTML = `
-  <h3>${item.name}</h3>
-  <p>${item.description || "No description provided."}</p>
-  <p><b>Location:</b> ${item.location}</p>
-  <p><b>Date:</b> ${item.date}</p>
-  <p><b>Submitted To:</b> ${item.submittedTo || "Not specified"}</p>
-  <button class="raise" onclick="raiseHand(${index})">✋ Raise Hand</button>
+${imageHTML}
+<h3>${item.name}</h3>
+<p>${item.description || "No description provided."}</p>
+<p><b>Location:</b> ${item.location}</p>
+<p><b>Date:</b> ${item.date}</p>
+<p><b>Submitted To:</b> ${item.submittedTo || "Not specified"}</p>
+<button class="raise" onclick="raiseHand(${index})">✋ Raise Hand</button>
 `;
 
 results.appendChild(card);
-
 }
-
 });
 
 if(!matchFound){
-
 results.innerHTML="<div class='no-result'>No matching item found</div>";
-
 }
-
 }
-
-/* OPEN CLAIM PAGE */
 
 function raiseHand(index){
-
 localStorage.setItem("claimItemIndex",index);
-
 window.location.href="Claim.html";
-
 }
 
+function openModal(src){
+let modal=document.getElementById("imageModal");
+let modalImg=document.getElementById("modalImg");
+modal.style.display="flex";
+modalImg.src=src;
+}
+
+document.getElementById("imageModal").addEventListener("click",function(){
+this.style.display="none";
+});
 </script>
 
 </body>
 </html>
-
