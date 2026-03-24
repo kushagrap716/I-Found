@@ -15,14 +15,12 @@
             padding-top: 80px;
         }
 
-        /* Navbar */
         .navbar {
             background: white;
             position: fixed;
             top: 0;
             width: 100%;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            z-index: 1000;
         }
 
         .navbar-container {
@@ -50,7 +48,6 @@
             color: #333;
         }
 
-        /* Hamburger */
         .hamburger {
             display: none;
             flex-direction: column;
@@ -106,7 +103,6 @@
             }
         }
 
-        /* Gallery container */
         .container {
             max-width: 1200px;
             margin: auto;
@@ -131,7 +127,6 @@
             }
         }
 
-        /* Card styles */
         .card {
             background: white;
             padding: 15px;
@@ -188,14 +183,13 @@
             font-size: 13px;
         }
 
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
-            top:0;
-            left:0;
-            width:100%;
-            height:100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background: rgba(0,0,0,0.8);
             justify-content: center;
             align-items: center;
@@ -209,6 +203,7 @@
         }
     </style>
 </head>
+
 <body>
 
     <div class="navbar">
@@ -237,7 +232,7 @@
     </div>
 
     <script>
-        // Hamburger menu toggle
+
         const hamburger = document.getElementById("hamburger");
         const navLinks = document.getElementById("navLinks");
         hamburger.addEventListener("click", () => {
@@ -245,7 +240,6 @@
             hamburger.classList.toggle("active");
         });
 
-        // Check if admin
         const isAdmin = localStorage.getItem("admin") === "true";
 
         let items = JSON.parse(localStorage.getItem("foundItems")) || [];
@@ -259,12 +253,15 @@
                 ? `<img src="${item.image}" onclick="openModal(this.src)">`
                 : `<div style="width:100%;height:150px;background:#ddd;border-radius:8px;margin-bottom:10px;">No Image</div>`;
 
-            let deleteButton = "";
-            if (isAdmin) {
-                deleteButton = `<button class="deleteBtn" onclick="deleteItem(${index})">✖</button>`;
-            }
+            const deleteButton = isAdmin 
+                ? `<button class="deleteBtn" onclick="deleteItem(${index})">✖</button>` 
+                : "";
 
-            const claimDetails = item.claimer
+            const statusHTML = isAdmin 
+                ? `<div class="status ${item.status==="claimed"?"green":"red"}"></div>` 
+                : "";
+
+            const claimDetails = item.claimer && isAdmin
                 ? `<div class="claim-info">
                      <b>Claimed By:</b> ${item.claimer.name}<br>
                      <b>Mobile:</b> ${item.claimer.mobile}<br>
@@ -274,7 +271,7 @@
 
             card.innerHTML = `
                 <div class="controls">
-                    ${isAdmin ? `<div class="status ${item.status==="claimed"?"green":"red"}"></div>` : ""}
+                    ${statusHTML}
                     ${deleteButton}
                 </div>
                 ${imageHTML}
@@ -290,6 +287,7 @@
         });
 
         function deleteItem(index) {
+            if (!isAdmin) return;
             let items = JSON.parse(localStorage.getItem("foundItems")) || [];
             if (confirm("Delete this item?")) {
                 items.splice(index, 1);
