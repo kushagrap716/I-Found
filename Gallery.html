@@ -76,9 +76,7 @@
         }
 
         @media (max-width: 768px) {
-            .hamburger {
-                display: flex;
-            }
+            .hamburger { display: flex; }
 
             .nav-links {
                 position: absolute;
@@ -98,9 +96,7 @@
                 border-top: 1px solid #eee;
             }
 
-            .nav-links.show {
-                max-height: 300px;
-            }
+            .nav-links.show { max-height: 300px; }
         }
 
         .container {
@@ -115,17 +111,8 @@
             gap: 20px;
         }
 
-        @media (max-width: 992px) {
-            .gallery {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 600px) {
-            .gallery {
-                grid-template-columns: 1fr;
-            }
-        }
+        @media (max-width: 992px) { .gallery { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 600px) { .gallery { grid-template-columns: 1fr; } }
 
         .card {
             background: white;
@@ -257,9 +244,7 @@
                 ? `<button class="deleteBtn" onclick="deleteItem(${index})">✖</button>` 
                 : "";
 
-            const statusHTML = isAdmin 
-                ? `<div class="status ${item.status==="claimed"?"green":"red"}"></div>` 
-                : "";
+            const statusHTML = `<div class="status ${item.status==="claimed"?"green":"red"}"></div>`;
 
             const claimDetails = item.claimer && isAdmin
                 ? `<div class="claim-info">
