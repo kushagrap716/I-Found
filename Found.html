@@ -1,283 +1,234 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Report Found Item</title>
+    <title>Report Found Item</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial;
+        }
 
-<style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:Arial}
+        body {
+            background: linear-gradient(to right, #43cea2, #185a9d);
+            padding-top: 80px;
+        }
 
-body{
-background:linear-gradient(to right,#43cea2,#185a9d);
-padding-top:80px;
-}
+        .navbar {
+            background: white;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
 
-.navbar{
-background:white;
-position:fixed;
-top:0;
-width:100%;
-box-shadow:0 4px 10px rgba(0,0,0,0.1);
-}
+        .navbar-container {
+            max-width: 1200px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+        }
 
-.navbar-container{
-max-width:1200px;
-margin:auto;
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:15px 20px;
-}
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: #185a9d;
+        }
 
-.logo{
-font-size:22px;
-font-weight:bold;
-color:#185a9d;
-}
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
 
-.nav-links{
-display:flex;
-gap:20px;
-}
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+        }
 
-.nav-links a{
-text-decoration:none;
-color:#333;
-font-weight:500;
-}
+        .nav-links a:hover {
+            color: #2193b0;
+        }
 
-.nav-links a:hover{
-color:#2193b0;
-}
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+        }
 
-.container{
-max-width:500px;
-margin:auto;
-background:white;
-padding:30px;
-border-radius:10px;
-box-shadow:0 5px 15px rgba(0,0,0,0.2);
-}
+        .hamburger span {
+            height: 3px;
+            width: 25px;
+            background: #185a9d;
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
 
-h2{
-margin-bottom:15px;
-}
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px,5px);
+        }
 
-form{
-display:flex;
-flex-direction:column;
-}
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
 
-input,textarea{
-margin-bottom:12px;
-padding:10px;
-border-radius:6px;
-border:1px solid #ccc;
-}
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px,-5px);
+        }
 
-.upload-box{
-border:2px dashed #aaa;
-padding:20px;
-text-align:center;
-border-radius:10px;
-cursor:pointer;
-margin-bottom:12px;
-transition:0.3s;
-}
+        @media(max-width:768px) {
+            .hamburger {
+                display: flex;
+            }
 
-.upload-box:hover{
-border-color:#185a9d;
-background:#f5faff;
-}
+            .nav-links {
+                position: absolute;
+                top: 60px;
+                right: 0;
+                background: white;
+                width: 100%;
+                max-height: 0;
+                overflow: hidden;
+                flex-direction: column;
+                transition: max-height 0.3s ease;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            }
 
-.upload-box.dragover{
-border-color:#3cb043;
-background:#eaffea;
-}
+            .nav-links a {
+                padding: 15px 20px;
+                border-top: 1px solid #eee;
+            }
 
-.preview{
-margin-top:10px;
-display:none;
-position:relative;
-}
+            .nav-links.show {
+                max-height: 300px;
+            }
+        }
 
-.preview img{
-width:100%;
-max-height:200px;
-object-fit:cover;
-border-radius:10px;
-}
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
 
-.remove-btn{
-position:absolute;
-top:5px;
-right:5px;
-background:red;
-color:white;
-border:none;
-border-radius:50%;
-width:25px;
-height:25px;
-cursor:pointer;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:16px;
-line-height:1;
-padding:0;
-}
+        form {
+            display: flex;
+            flex-direction: column;
+        }
 
-button{
-padding:12px;
-background:#3cb043;
-color:white;
-border:none;
-border-radius:6px;
-cursor:pointer;
-}
+        input, textarea {
+            margin-bottom: 12px;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
 
-button:hover{
-background:#2e8b3c;
-}
-</style>
+        button {
+            padding: 12px;
+            background: #3cb043;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #2e8b3f;
+        }
+
+        .image-preview {
+            margin-bottom: 12px;
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+    </style>
 </head>
 
 <body>
 
-<div class="navbar">
-<div class="navbar-container">
-<div class="logo">📦 I FOUND</div>
-<div class="nav-links">
-<a href="Project.html">Home</a>
-<a href="Gallery.html">Item Gallery</a>
-<a href="Lost.html">Lost Item</a>
-</div>
-</div>
-</div>
+    <div class="navbar">
+        <div class="navbar-container">
+            <div class="logo">📦 I FOUND</div>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="Project.html">Home</a>
+                <a href="Gallery.html">Item Gallery</a>
+                <a href="Lost.html">Lost Item</a>
+            </div>
+        </div>
+    </div>
 
-<div class="container">
-<h2>Report Found Item</h2>
+    <div class="container">
+        <h2>Report Found Item</h2>
+        <form id="foundForm">
+            <input type="text" id="itemName" placeholder="Item Name" required>
+            <textarea id="description" placeholder="Description" required></textarea>
+            <input type="date" id="dateFound" required>
+            <input type="text" id="locationFound" placeholder="Location Found" required>
+            <input type="text" id="submittedTo" placeholder="Submitted To" required>
+            <input type="file" id="itemImage" accept="image/*">
+            <img id="preview" class="image-preview" style="display:none;">
+            <button type="submit">Submit</button>
+        </form>
+    </div>
 
-<form id="foundForm">
+    <script>
 
-<input type="text" id="itemName" placeholder="Item Name" required>
+        const hamburger = document.getElementById("hamburger");
+        const navLinks = document.getElementById("navLinks");
+        hamburger.addEventListener("click", () => {
+            navLinks.classList.toggle("show");
+            hamburger.classList.toggle("active");
+        });
 
-<textarea id="description" placeholder="Description" required></textarea>
+        const preview = document.getElementById("preview");
+        document.getElementById("itemImage").addEventListener("change", (e) => {
+            if(e.target.files && e.target.files[0]){
+                let reader = new FileReader();
+                reader.onload = function(event){
+                    preview.src = event.target.result;
+                    preview.style.display = "block";
+                }
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
 
-<input type="date" id="dateFound" required>
+        document.getElementById("foundForm").addEventListener("submit", function(e){
+            e.preventDefault();
+            let name = itemName.value.trim();
+            let desc = description.value.trim();
+            let date = dateFound.value;
+            let location = locationFound.value.trim();
+            let submitted = submittedTo.value.trim();
+            let imgData = preview.src || "";
 
-<input type="text" id="locationFound" placeholder="Location Found" required>
+            if(!name || !desc || !date || !location || !submitted){
+                alert("All fields required!");
+                return;
+            }
 
-<input type="text" id="submittedTo" placeholder="Submitted To" required>
+            let item = { name, description: desc, date, location, submittedTo: submitted, image: imgData, status: "inventory" };
+            let items = JSON.parse(localStorage.getItem("foundItems")) || [];
+            items.push(item);
+            localStorage.setItem("foundItems", JSON.stringify(items));
 
-<div class="upload-box" id="uploadBox">
-    Upload Image Here
-<input type="file" id="itemImage" accept="image/*" hidden>
-</div>
-
-<div class="preview" id="previewContainer">
-<img id="previewImage">
-<button type="button" class="remove-btn" id="removeImage">X</button>
-</div>
-
-<button type="submit">Submit</button>
-
-</form>
-</div>
-
-<script>
-let uploadBox = document.getElementById("uploadBox");
-let fileInput = document.getElementById("itemImage");
-let previewContainer = document.getElementById("previewContainer");
-let previewImage = document.getElementById("previewImage");
-let removeBtn = document.getElementById("removeImage");
-
-let selectedFile = null;
-
-uploadBox.addEventListener("click", () => fileInput.click());
-
-fileInput.addEventListener("change", function() {
-    handleFile(this.files[0]);
-});
-
-uploadBox.addEventListener("dragover", (e) => {
-    e.preventDefault();
-    uploadBox.classList.add("dragover");
-});
-
-uploadBox.addEventListener("dragleave", () => {
-    uploadBox.classList.remove("dragover");
-});
-
-uploadBox.addEventListener("drop", (e) => {
-    e.preventDefault();
-    uploadBox.classList.remove("dragover");
-    let file = e.dataTransfer.files[0];
-    handleFile(file);
-});
-
-function handleFile(file) {
-    if (!file || !file.type.startsWith("image/")) {
-        alert("Please select a valid image!");
-        return;
-    }
-
-    selectedFile = file;
-    let reader = new FileReader();
-    reader.onload = function() {
-        previewImage.src = reader.result;
-        previewContainer.style.display = "block";
-        uploadBox.style.display = "none";
-    };
-    reader.readAsDataURL(file);
-}
-
-removeBtn.addEventListener("click", () => {
-    selectedFile = null;
-    previewContainer.style.display = "none";
-    fileInput.value = "";
-    uploadBox.style.display = "block";
-});
-
-document.getElementById("foundForm").addEventListener("submit", function(e) {
-    e.preventDefault();
-
-    let name = itemName.value.trim();
-    let desc = description.value.trim();
-    let date = dateFound.value;
-    let location = locationFound.value.trim();
-    let submitted = submittedTo.value.trim();
-
-    if (!name || !desc || !date || !location || !submitted || !selectedFile) {
-        alert("All fields including image are required!");
-        return;
-    }
-
-    let reader = new FileReader();
-
-    reader.onload = function() {
-        let item = {
-            name,
-            description: desc,
-            date,
-            location,
-            submittedTo: submitted,
-            image: reader.result,
-            status: "inventory"
-        };
-
-        let items = JSON.parse(localStorage.getItem("foundItems")) || [];
-        items.push(item);
-        localStorage.setItem("foundItems", JSON.stringify(items));
-
-        alert("Item added successfully!");
-        document.getElementById("foundForm").reset();
-        previewContainer.style.display = "none";
-        selectedFile = null;
-    };
-
-    reader.readAsDataURL(selectedFile);
-});
-</script>
+            alert("Item added successfully!");
+            document.getElementById("foundForm").reset();
+            preview.style.display = "none";
+        });
+    </script>
 
 </body>
 </html>
