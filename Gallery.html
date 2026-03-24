@@ -3,7 +3,7 @@
 <head>
     <title>Item Gallery</title>
     <style>
-
+        /* Reset & Global Styles */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -16,6 +16,7 @@
             padding-top: 80px;
         }
 
+        /* Navbar */
         .navbar {
             background: white;
             position: fixed;
@@ -50,6 +51,7 @@
             color: #333;
         }
 
+        /* Hamburger menu */
         .hamburger {
             display: none;
             flex-direction: column;
@@ -105,6 +107,7 @@
             }
         }
 
+        /* Container & Gallery */
         .container {
             max-width: 1200px;
             margin: auto;
@@ -129,6 +132,7 @@
             }
         }
 
+        /* Card Styles */
         .card {
             background: white;
             padding: 15px;
@@ -148,13 +152,20 @@
             cursor: pointer;
         }
 
+        /* Status & Delete container at bottom-right */
+        .card-footer {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
         .status {
             width: 14px;
             height: 14px;
             border-radius: 50%;
-            position: absolute;
-            bottom: 15px;
-            right: 15px;
             border: 1px solid #000;
         }
 
@@ -178,11 +189,9 @@
             justify-content: center;
             font-size: 14px;
             cursor: pointer;
-            position: absolute;
-            top: 15px;
-            right: 15px;
         }
 
+        /* Claimer Info */
         .claim-info {
             margin-top: 10px;
             background: #f4f4f4;
@@ -191,6 +200,7 @@
             font-size: 13px;
         }
 
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -213,6 +223,7 @@
 </head>
 <body>
 
+    <!-- Navbar -->
     <div class="navbar">
         <div class="navbar-container">
             <div class="logo">📦 I FOUND</div>
@@ -229,17 +240,19 @@
         </div>
     </div>
 
+    <!-- Gallery Container -->
     <div class="container">
         <h1 style="color:white; margin-bottom:30px;">Found Items Gallery</h1>
         <div class="gallery" id="gallery"></div>
     </div>
 
+    <!-- Image Modal -->
     <div class="modal" id="imageModal">
         <img id="modalImg">
     </div>
 
     <script>
-
+        // Navbar toggle
         const hamburger = document.getElementById("hamburger");
         const navLinks = document.getElementById("navLinks");
         hamburger.addEventListener("click", () => {
@@ -247,8 +260,10 @@
             hamburger.classList.toggle("active");
         });
 
+        // Admin check
         const isAdmin = localStorage.getItem("admin") === "true";
 
+        // Load items
         const items = JSON.parse(localStorage.getItem("foundItems")) || [];
         const gallery = document.getElementById("gallery");
 
@@ -260,9 +275,6 @@
                 ? `<img src="${item.image}" onclick="openModal(this.src)">`
                 : `<div style="width:100%; height:150px; background:#ddd; border-radius:8px; margin-bottom:10px;">No Image</div>`;
 
-            const statusClass = (item.status && item.status.toLowerCase() === "claimed") ? "green" : "red";
-            const statusHTML = `<div class="status ${statusClass}"></div>`;
-
             const claimDetails = item.claimer
                 ? `<div class="claim-info">
                      <b>Claimed By:</b> ${item.claimer.name}<br>
@@ -271,8 +283,10 @@
                    </div>`
                 : "";
 
-            const deleteBtnHTML = isAdmin 
-                ? `<button class="deleteBtn" onclick="deleteItem('${item.id || item.name}')">✖</button>` 
+            const statusClass = (item.status && item.status.toLowerCase() === "claimed") ? "green" : "red";
+
+            const deleteBtnHTML = isAdmin
+                ? `<button class="deleteBtn" onclick="deleteItem('${item.id || item.name}')">✖</button>`
                 : "";
 
             card.innerHTML = `
@@ -283,8 +297,10 @@
                 <p><b>Date:</b> ${item.date}</p>
                 <p><b>Submitted To:</b> ${item.submittedTo || "Not specified"}</p>
                 ${claimDetails}
-                ${statusHTML}
-                ${deleteBtnHTML}
+                <div class="card-footer">
+                    <div class="status ${statusClass}"></div>
+                    ${deleteBtnHTML}
+                </div>
             `;
 
             gallery.appendChild(card);
